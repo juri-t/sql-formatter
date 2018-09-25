@@ -2,13 +2,13 @@
 =begin
 	SQLをフォーマットします
 =end
-NEWLINE_WORDS = ['select', 'from', 'where', 'and', 'or', 'create', 'inner', 'left', 'right', 'full', 'cross', 'union']
+NEWLINE_WORDS = ['select', 'from', 'where', 'and', 'or', 'create', 'inner', 'left', 'right', 'full', 'cross', 'union', 'group', 'order']
 
-RESERVED_WORDS = NEWLINE_WORDS.concat(['join', 'table', 'as', 'all', 'in'])
+RESERVED_WORDS = NEWLINE_WORDS.dup.concat(['join', 'table', 'as', 'all', 'in', 'by'])
 
 def format(word)
-	if word.include?("=")
-		word.gsub("=", " = ")
+	if word.length > 1 and word.include?("=") then
+		word.gsub(/\s*=\s*/, " = ")
 	else
 		word
 	end
@@ -18,7 +18,7 @@ end
 lines = readlines
 is_newline = false
 for line in lines
-	for word in line.split()
+	for word in line.gsub(/\s?,\s?/, ", ").split()
 		# 改行させる?
 		if NEWLINE_WORDS.include?(word.downcase) then
 			print "\n" + Array.new(6 - word.length, " ").join()
@@ -40,7 +40,6 @@ for line in lines
 			print " "
 			is_newline = false
 		end
-
 	end
 end
 print "\n"
